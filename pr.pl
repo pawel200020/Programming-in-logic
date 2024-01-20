@@ -25,31 +25,18 @@ writeHorizontalLine(I, Y, R, [H|T], [H|T2]) :- Y1 is Y-1, writeHorizontalLine(I,
 line(S1,[X1,Y1],[X2,Y2],Z,S2):- line(S1,[X1,Y1],[X2,Y2],Z,0,S2),!.
 line([],[_,_],[_,_],_,_,[]).
 line([H|S1],[X,Yc],[X,Yc],Z,Yc,[H2|S2]):- replaceRow(X,Z,H,H2), Yc2 is Yc+1,line(S1,[X,Yc],[X,Yc],Z,Yc2,S2).
-line([H|S1],[X1,Yc],[X2,Y2],Z,Yc,[H2|S2]):- abs(X2-X1,Xdif), abs(Y2-Yc, Ydif), Xdif==Ydif, X1-X2 < 0, replaceRow(X1,Z,H,H2), Xn is X1+1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
-line([H|S1],[X1,Yc],[X2,Y2],Z,Yc,[H2|S2]):- abs(X2-X1,Xdif), abs(Y2-Yc, Ydif), Xdif==Ydif, X1-X2 > 0, replaceRow(X1,Z,H,H2), Xn is X1-1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
-line([H|S1],[X2,Y2],[X1,Yc],Z,Yc,[H2|S2]):- abs(X2-X1,Xdif), abs(Y2-Yc, Ydif), Xdif==Ydif, X1-X2 < 0, replaceRow(X1,Z,H,H2), Xn is X1+1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
-line([H|S1],[X2,Y2],[X1,Yc],Z,Yc,[H2|S2]):- abs(X2-X1,Xdif), abs(Y2-Yc, Ydif), Xdif==Ydif, X1-X2 > 0, replaceRow(X1,Z,H,H2), Xn is X1-1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
 line([H|S1],[X,Yc],[X,Y2],Z,Yc,[H2|S2]):-  replaceRow(X,Z,H,H2), Yc2 is Yc+1,line(S1,[X,Yc2],[X,Y2],Z,Yc2,S2).
 line([H|S1],[X,Y1],[X,Yc],Z,Yc,[H2|S2]):- replaceRow(X,Z,H,H2), Yc2 is Yc+1,line(S1,[X,Y1],[X,Yc2],Z,Yc2,S2).
 line([H|S1],[X1,Yc],[X2,Yc],Z,Yc,[H2|S2]):- X1 > X2, Xr is X1-X2, writeHorizontalLine(Xr, X2, Z,H,H2), Yc1 is Yc+1, line(S1,[X1,Yc],[X2,Yc],Z,Yc1,S2).
 line([H|S1],[X1,Yc],[X2,Yc],Z,Yc,[H2|S2]):- X1 < X2, Xr is X2-X1, writeHorizontalLine(Xr, X1, Z,H,H2), Yc1 is Yc+1, line(S1,[X1,Yc],[X2,Yc],Z,Yc1,S2).
+line([H|S1],[X1,Yc],[X2,Y2],Z,Yc,[H2|S2]):- X1-X2 < 0, replaceRow(X1,Z,H,H2), Xn is X1+1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
+line([H|S1],[X1,Yc],[X2,Y2],Z,Yc,[H2|S2]):- X1-X2 > 0, replaceRow(X1,Z,H,H2), Xn is X1-1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
+line([H|S1],[X2,Y2],[X1,Yc],Z,Yc,[H2|S2]):- X1-X2 < 0, replaceRow(X1,Z,H,H2), Xn is X1+1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
+line([H|S1],[X2,Y2],[X1,Yc],Z,Yc,[H2|S2]):- X1-X2 > 0, replaceRow(X1,Z,H,H2), Xn is X1-1, Yc1 is Yc+1, line(S1,[Xn,Yc1],[X2,Y2],Z,Yc1,S2).
 line([H|S1],[X1,Y1],[X2,Y2],Z,Yc,[H|S2]):- Yc2 is Yc+1, line(S1,[X1,Y1],[X2,Y2],Z,Yc2,S2).
 
 
-
-
-
-
-
-%line(S1,[X,Y1],[X,Y2],Z,Yc,S2):- Y1 < Y2, line(S1,[X,Y2],[X,Y1],Z,Yc,S2).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-m2([A|As], [B|Bs], [A,B|Rs]) :-
-    !, m2(As, Bs, Rs).
-m2([], Bs, Bs) :- !.
-m2(As, [], As).
-
-replace(_, _, [], []).
-replace(O, R, [O|T], [R|T2]) :- replace(O, R, T, T2).
-replace(O, R, [H|T], [H|T2]) :- H \= O, replace(O, R, T, T2).
+poly(S1,[[X,Y]|R],Z,S2):-poly(S1,[[X,Y]|R],Z,S2,[X,Y]),!.
+poly(_,[],_,_,_):-!.
+poly(S1,[[X,Y]],Z,S3,[X1,Y1]):-poly(S1,[],Z,S3,[]),line(S1,[X,Y],[X1,Y1],Z,S3).
+poly(S1,[[X1,Y1],[X2,Y2]|R],Z,S3,[X0,Y0]):-poly(S1,[[X2,Y2]|R],Z,S2,[X0,Y0]),line(S2,[X1,Y1],[X2,Y2],Z,S3).
