@@ -47,3 +47,15 @@ clean([],_,_,_,_,_,[]).
 clean([H|S1],X1,Y,X2,Y,Y,[H2|S2]):- writeHorizontalLine(X2-X1, X1,' ', H, H2),Y3 is Y+1, clean(S1,X1,Y3,X2,Y,Y3,S2).
 clean([H|S1],X1,Y,X2,Y2,Y,[H2|S2]):-writeHorizontalLine(X2-X1, X1,' ', H, H2),Y3 is Y+1, clean(S1,X1,Y3,X2,Y2,Y3,S2).
 clean([H|S1],X1,Y1,X2,Y2,Y,[H|S2]):-Y3 is Y +1, clean(S1,X1,Y1,X2,Y2,Y3,S2).
+
+copy(S1,X,Y,S2,S3):-copy(S1,X,Y,S2,0,S3),!.
+copy([],_,_,_,_,[]).
+copy([H|S1],X,Y,[],Y,[H|S3]):- Y2 is Y+1, copy(S1,X,Y2,[],Y2,S3).
+copy([H|S1],X,Y,[H2|S2],Y,[H3|S3]):-mergeRows(H,H2,X,H3), Y2 is Y+1, copy(S1,X,Y2,S2,Y2,S3).
+copy([H|S1],X,Y,S2,Y2,[H|S3]):- Y3 is Y2+1, copy(S1,X,Y,S2,Y3,S3).
+
+mergeRows(S1,S2,X,S3):-mergeRows(S1,S2,X,0,S3),!.
+mergeRows([],_,_,_,[]).
+mergeRows([H|S1],[], X, X, [H|S3]):- X1 is X+1, mergeRows(S1,[],X1,X1,S3).
+mergeRows([_|S1],[H2|S2], X, X, [H2|S3]):- X1 is X+1, mergeRows(S1,S2,X1,X1,S3).
+mergeRows([H|S1],S2, X, Xi, [H|S3]):- Xi2 is Xi + 1, mergeRows(S1,S2,X,Xi2,S3).
