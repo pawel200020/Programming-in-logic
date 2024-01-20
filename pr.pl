@@ -40,3 +40,10 @@ poly(S1,[[X,Y]|R],Z,S2):-poly(S1,[[X,Y]|R],Z,S2,[X,Y]),!.
 poly(_,[],_,_,_):-!.
 poly(S1,[[X,Y]],Z,S3,[X1,Y1]):-poly(S1,[],Z,S3,[]),line(S1,[X,Y],[X1,Y1],Z,S3).
 poly(S1,[[X1,Y1],[X2,Y2]|R],Z,S3,[X0,Y0]):-poly(S1,[[X2,Y2]|R],Z,S2,[X0,Y0]),line(S2,[X1,Y1],[X2,Y2],Z,S3).
+
+
+clean(S1,X1,Y1,X2,Y2,S2):-clean(S1,X1,Y1,X2,Y2,0,S2),!.
+clean([],_,_,_,_,_,[]).
+clean([H|S1],X1,Y,X2,Y,Y,[H2|S2]):- writeHorizontalLine(X2-X1, X1,' ', H, H2),Y3 is Y+1, clean(S1,X1,Y3,X2,Y,Y3,S2).
+clean([H|S1],X1,Y,X2,Y2,Y,[H2|S2]):-writeHorizontalLine(X2-X1, X1,' ', H, H2),Y3 is Y+1, clean(S1,X1,Y3,X2,Y2,Y3,S2).
+clean([H|S1],X1,Y1,X2,Y2,Y,[H|S2]):-Y3 is Y +1, clean(S1,X1,Y1,X2,Y2,Y3,S2).
